@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Message 🔐</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:
+    radial-gradient(circle at 20% 20%, #5b176d 0%, transparent 30%),
+    radial-gradient(circle at 80% 70%, #006b7a 0%, transparent 35%),
+    #050914;
+  font-family:Arial, sans-serif;
+  color:white;
+  overflow:hidden;
+}
+
+.container{
+  width:330px;
+  max-width:92%;
+  padding:22px;
+  border-radius:30px;
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.15);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+
+/* Lock icon */
+.lock{
+  text-align:center;
+  font-size:45px;
+  margin-bottom:8px;
+}
+
+.title{
+  text-align:center;
+  font-size:18px;
+  margin-bottom:15px;
+  opacity:.9;
+}
+
+/* PIN display */
+.display{
+  height:65px;
+  border-radius:18px;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.1);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:30px;
+  letter-spacing:10px;
+  margin-bottom:18px;
+  color:#fff;
+}
+
+/* keypad */
+.keypad{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+button{
+  height:60px;
+  border:none;
+  border-radius:18px;
+  color:white;
+  font-size:22px;
+  font-weight:bold;
+  background:rgba(255,255,255,.13);
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,.15),
+    0 5px 15px rgba(0,0,0,.2);
+  cursor:pointer;
+  transition:.15s;
+}
+
+button:active{
+  transform:scale(.92);
+}
+
+.clear{
+  background:rgba(255,60,150,.35);
+}
+
+.ok{
+  background:linear-gradient(135deg,#00c6ff,#0072ff);
+}
+
+.message{
+  display:none;
+  text-align:center;
+  animation:show .8s ease;
+}
+
+.message .heart{
+  font-size:55px;
+  margin-bottom:15px;
+  animation:heart 1s infinite;
+}
+
+.message h1{
+  font-size:25px;
+  margin-bottom:18px;
+}
+
+.message p{
+  font-size:19px;
+  line-height:1.8;
+  color:#eee;
+}
+
+.timer{
+  margin-top:22px;
+  font-size:13px;
+  opacity:.6;
+}
+
+@keyframes show{
+  from{
+    opacity:0;
+    transform:translateY(20px) scale(.95);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0) scale(1);
+  }
+}
+
+@keyframes heart{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.15);}
+}
+
+.fadeout{
+  animation:fadeout .8s forwards;
+}
+
+@keyframes fadeout{
+  to{
+    opacity:0;
+    transform:scale(.8);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- PIN SCREEN -->
+  <div id="lockScreen">
+
+    <div class="lock">🔐</div>
+
+    <div class="title">
+      Enter PIN
+    </div>
+
+    <div class="display" id="display"></div>
+
+    <div class="keypad">
+
+      <button onclick="press(1)">1</button>
+      <button onclick="press(2)">2</button>
+      <button onclick="press(3)">3</button>
+
+      <button onclick="press(4)">4</button>
+      <button onclick="press(5)">5</button>
+      <button onclick="press(6)">6</button>
+
+      <button onclick="press(7)">7</button>
+      <button onclick="press(8)">8</button>
+      <button onclick="press(9)">9</button>
+
+      <button class="clear" onclick="clearPin()">AC</button>
+      <button onclick="press(0)">0</button>
+      <button class="ok" onclick="checkPin()">✓</button>
+
+    </div>
+
+  </div>
+
+
+  <!-- SECRET MESSAGE -->
+  <div class="message" id="message">
+
+    <div class="heart">❤️</div>
+
+    <h1>আপনি আমার ক্রাশ 🥰</h1>
+
+    <p>
+      আপনাকে যেদিন প্রথম দেখছিলাম,<br>
+      সেদিন থেকেই মনে হয়<br>
+      আপনার ওপর ক্রাশ খাইছি। ❤️
+    </p>
+
+    <div class="timer">
+      এই মেসেজ ৭ সেকেন্ড পর অদৃশ্য হয়ে যাবে...
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+let pin = "";
+const correctPin = "3326";
+
+function press(number){
+
+  if(pin.length < 4){
+    pin += number;
+
+    document.getElementById("display").innerText =
+      "•".repeat(pin.length);
+  }
+}
+
+function clearPin(){
+
+  pin = "";
+
+  document.getElementById("display").innerText = "";
+}
+
+function checkPin(){
+
+  if(pin === correctPin){
+
+    document.getElementById("lockScreen").style.display = "none";
+
+    const message = document.getElementById("message");
+
+    message.style.display = "block";
+
+    // ৭ সেকেন্ড পর মেসেজ অদৃশ্য হবে
+    setTimeout(function(){
+
+      message.classList.add("fadeout");
+
+      setTimeout(function(){
+        message.style.display = "none";
+      },800);
+
+    },7000);
+
+  }else{
+
+    document.getElementById("display").innerText = "Wrong";
+
+    setTimeout(function(){
+      clearPin();
+    },700);
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
